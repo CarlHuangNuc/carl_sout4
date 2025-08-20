@@ -4056,6 +4056,12 @@ class Qwen2_5OmniForConditionalGeneration(Qwen2_5OmniPreTrainedModel, Generation
                     **{k: (v.to(input_ids.device) if torch.is_tensor(v) else v) for k, v in talker_kwargs.items()},
                 )
             talker_generate_codes = talker_result["sequences"][:, talker_input_ids.shape[1] : ]
+
+            if talker_generate_codes.shape[1] == 0:
+                print("carl test some error handle point length ==0 ...")
+                break
+            if talker_generate_codes[:,-1] == 8294:
+                talker_generate_codes = talker_generate_codes[:,:-1]
             
             # 3. Generate wavs from code
             if self.token2wav.dtype != torch.float:
